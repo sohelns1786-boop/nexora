@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in - Google Accounts</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #ffffff;
+      color: #202124;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .card {
+      width: 450px;
+      padding: 40px;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        border: none;
+        width: 100%;
+        padding: 24px;
+      }
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .logo {
+      width: 74px;
+      height: 24px;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.33;
+      margin: 0 0 8px 0;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #202124;
+      margin: 0 0 24px 0;
+    }
+
+    .account-list {
+      text-align: left;
+      margin-bottom: 24px;
+    }
+
+    .account-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid #dadce0;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .account-item:first-child {
+      border-top: 1px solid #dadce0;
+    }
+
+    .account-item:hover {
+      background-color: #f8f9fa;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #ffffff;
+      font-weight: 500;
+      font-size: 14px;
+      margin-right: 12px;
+    }
+
+    .info {
+      flex-grow: 1;
+    }
+
+    .name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #3c4043;
+    }
+
+    .email {
+      font-size: 12px;
+      color: #5f6368;
+    }
+
+    .another-account {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      cursor: pointer;
+      color: #1a73e8;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background-color 0.15s ease;
+    }
+
+    .another-account:hover {
+      background-color: #f8f9fa;
+    }
+
+    .another-account svg {
+      margin-right: 12px;
+      fill: #1a73e8;
+    }
+
+    /* Form Mode styling */
+    .form-container {
+      display: none;
+      text-align: left;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #5f6368;
+      margin-bottom: 6px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.2s ease;
+    }
+
+    .input-field:focus {
+      border-color: #1a73e8;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 30px;
+    }
+
+    .btn-text {
+      color: #1a73e8;
+      font-size: 14px;
+      font-weight: 500;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .btn-text:hover {
+      background-color: #f8f9fa;
+    }
+
+    .btn-primary {
+      background-color: #1a73e8;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      outline: none;
+      box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #1b66ca;
+      box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
+    }
+
+    /* Loader styling */
+    .loader-container {
+      display: none;
+      padding: 40px 0;
+    }
+
+    .spinner {
+      margin: 0 auto 24px auto;
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(26, 115, 232, 0.1);
+      border-radius: 50%;
+      border-top-color: #1a73e8;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loader-text {
+      font-size: 16px;
+      color: #5f6368;
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="selectorCard">
+    <!-- Header Section -->
+    <div class="logo-container">
+      <svg class="logo" viewBox="0 0 74 24">
+        <!-- SVG Paths for Google Logo -->
+        <path d="M12.24 10.285V13.4h6.887c-.277 1.564-1.79 4.585-6.887 4.585-4.41 0-8.01-3.656-8.01-8.17s3.6-8.17 8.01-8.17c2.51 0 4.19 1.05 5.15 1.97l2.45-2.36c-1.57-1.47-3.61-2.36-7.6-2.36C5.5 1 0 6.51 0 12.185S5.5 23.37 12.24 23.37c7.04 0 11.72-4.95 11.72-11.93 0-.8-.09-1.4-.2-1.97h-11.52zm20.07 1.9V22.7h3.11v-1.63h.09c.43.8 1.48 1.63 3.19 1.63 3.32 0 3.92-2.19 3.92-5.02v-7.39h-3.12v6.98c0 1.65-.6 2.36-1.85 2.36-1.25 0-1.86-.71-1.86-2.36v-6.98h-3.13v2.85zm12.39-1.9v10.515h3.11v-1.63h.09c.43.8 1.48 1.63 3.19 1.63 3.32 0 3.92-2.19 3.92-5.02v-7.39h-3.12v6.98c0 1.65-.6 2.36-1.85 2.36-1.25 0-1.86-.71-1.86-2.36v-6.98h-3.13v2.85zm25.96 4.385l-4.22-10.285h-3.32l6.02 13.91-3.21 6.845h3.22L74 14.67zM24.71 18.23c0-3.11 2.51-5.62 5.62-5.62s5.62 2.51 5.62 5.62-2.51 5.62-5.62 5.62-5.62-2.51-5.62-5.62zm8.13 0c0-1.52-.94-2.51-2.51-2.51s-2.51.99-2.51 2.51.94 2.51 2.51 2.51 2.51-.99 2.51-2.51zm21.32 0c0-3.11 2.51-5.62 5.62-5.62s5.62 2.51 5.62 2.51-2.51 5.62-5.62 5.62-5.62-2.51-5.62-5.62zm8.12 0c0-1.52-.94-2.51-2.51-2.51s-2.51.99-2.51 2.51.94 2.51 2.51 2.51 2.51-.99 2.51-2.51z" fill="#4285F4"/>
+        <path d="M12.24 1.485c3.99 0 6.03 2.18 7.6 2.36l2.45-2.36C18.27.015 16.23-.875 12.24-.875c-6.74 0-12.24 5.51-12.24 11.185S5.5 21.5 12.24 21.5c7.04 0 11.72-4.95 11.72-11.93 0-.8-.09-1.4-.2-1.97h-11.52v3.115h6.887c-.277 1.564-1.79 4.585-6.887 4.585-4.41 0-8.01-3.656-8.01-8.17s3.6-8.17 8.01-8.17" fill="#EA4335"/>
+        <path d="M12.24 23.37c7.04 0 11.72-4.95 11.72-11.93 0-.8-.09-1.4-.2-1.97h-11.52v3.115h6.887c-.277 1.564-1.79 4.585-6.887 4.585" fill="#FBBC05"/>
+        <path d="M12.24 10.285h-11.52v3.115h6.887c-.277 1.564-1.79 4.585-6.887 4.585-4.41 0-8.01-3.656-8.01-8.17s3.6-8.17 8.01-8.17" fill="#34A853"/>
+      </svg>
+    </div>
+
+    <!-- Mode 1: Account Selector -->
+    <div id="selectorContent">
+      <h1 class="title">Choose an account</h1>
+      <p class="subtitle">to continue to <strong>Nexora Luxury</strong></p>
+
+      <div class="account-list">
+        <!-- Option 1: Sohel Mahiniyaz -->
+        <div class="account-item" onclick="selectAccount('Sohel Mahiniyaz', 'sohel@gmail.com', '#1a73e8')">
+          <div class="avatar" style="background-color: #1a73e8;">SM</div>
+          <div class="info">
+            <div class="name">Sohel Mahiniyaz</div>
+            <div class="email">sohel@gmail.com</div>
+          </div>
+        </div>
+
+        <!-- Option 2: M.R.S Cream Studio -->
+        <div class="account-item" onclick="selectAccount('M.R.S Cream Studio', 'mrscreamstudio@gmail.com', '#e27300')">
+          <div class="avatar" style="background-color: #e27300;">CS</div>
+          <div class="info">
+            <div class="name">M.R.S Cream Studio</div>
+            <div class="email">mrscreamstudio@gmail.com</div>
+          </div>
+        </div>
+
+        <!-- Option 3: Nexora Premium Admin -->
+        <div class="account-item" onclick="selectAccount('Nexora Admin', 'admin@nexora.com', '#202124')">
+          <div class="avatar" style="background-color: #202124;">NA</div>
+          <div class="info">
+            <div class="name">Nexora Admin</div>
+            <div class="email">admin@nexora.com</div>
+          </div>
+        </div>
+
+        <!-- Option 4: Use Another Account -->
+        <div class="another-account" onclick="showForm()">
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/>
+          </svg>
+          Use another account
+        </div>
+      </div>
+    </div>
+
+    <!-- Mode 2: Custom Sign-in Form -->
+    <div id="formContent" class="form-container">
+      <h1 class="title" style="text-align: center; margin-bottom: 24px;">Sign in</h1>
+      
+      <div class="input-group">
+        <label class="input-label" for="customName">Your Full Name</label>
+        <input class="input-field" type="text" id="customName" placeholder="e.g. Guest Explorer" required />
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="customEmail">Email Address</label>
+        <input class="input-field" type="email" id="customEmail" placeholder="username@gmail.com" required />
+      </div>
+
+      <div class="btn-group">
+        <button class="btn-text" type="button" onclick="showSelector()">Back</button>
+        <button class="btn-primary" type="button" onclick="submitCustom()">Continue</button>
+      </div>
+    </div>
+
+    <!-- Mode 3: Material Spinner Loader -->
+    <div id="loaderContent" class="loader-container">
+      <div class="spinner"></div>
+      <div class="loader-text">Verifying credentials...</div>
+    </div>
+  </div>
+
+  <script>
+    const selectorContent = document.getElementById('selectorContent');
+    const formContent = document.getElementById('formContent');
+    const loaderContent = document.getElementById('loaderContent');
+
+    function showForm() {
+      selectorContent.style.display = 'none';
+      formContent.style.display = 'block';
+      document.getElementById('customName').focus();
+    }
+
+    function showSelector() {
+      formContent.style.display = 'none';
+      selectorContent.style.display = 'block';
+    }
+
+    function triggerLoader(text) {
+      selectorContent.style.display = 'none';
+      formContent.style.display = 'none';
+      loaderContent.style.display = 'block';
+      if (text) {
+        document.querySelector('.loader-text').innerText = text;
+      }
+    }
+
+    // Handles selected Google account
+    function selectAccount(name, email, color) {
+      triggerLoader(`Signing in as ${name}...`);
+
+      const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+
+      const userData = {
+        name,
+        email,
+        initials,
+        color,
+        isGoogle: true
+      };
+
+      // Emulate Google OAuth latency for visual premium quality
+      setTimeout(() => {
+        // Dispatches profile credentials back to parent browser window
+        if (window.opener && !window.opener.closed) {
+          window.opener.postMessage({ type: 'GOOGLE_AUTH_SUCCESS', user: userData }, '*');
+          // Add a small delay to ensure parent processes the message before closing
+          setTimeout(() => {
+            window.close();
+          }, 500);
+        } else {
+          alert('Unable to communicate with main window. Please close this window and try again.');
+        }
+      }, 1200);
+    }
+
+    // Handles custom form submit
+    function submitCustom() {
+      const name = document.getElementById('customName').value.trim();
+      const email = document.getElementById('customEmail').value.trim();
+
+      if (!name || !email) {
+        alert('Please fill out all credentials.');
+        return;
+      }
+
+      if (!email.includes('@')) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+
+      const hashColor = stringToColor(name);
+      selectAccount(name, email, hashColor);
+    }
+
+    // Utility: generates unique hex colors from names for customized avatars
+    function stringToColor(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+      return '#' + "00000".substring(0, 6 - c.length) + c;
+    }
+  </script>
+</body>
+</html>

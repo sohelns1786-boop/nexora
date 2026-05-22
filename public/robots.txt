@@ -1,0 +1,8 @@
+# Sitemap
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /.well-known
+
+# Crawl-delay
+Crawl-delay: 1
