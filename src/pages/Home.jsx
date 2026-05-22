@@ -30,7 +30,7 @@ const Home = () => {
             {[
               { name: 'Watches', img: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000' },
               { name: 'Audio', img: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?q=80&w=1000' },
-              { name: 'Accessories', img: 'https://images.unsplash.com/photo-1534073828943-f801091bb18c?q=80&w=1000' }
+              { name: 'Accessories', img: 'https://lifestylebyps.com/blogs/mens-fashion-blog/men-s-simplified-guide-to-wearing-accessories' }
             ].map((cat, i) => (
               <Link
                 key={cat.name}
