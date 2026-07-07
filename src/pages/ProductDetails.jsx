@@ -9,8 +9,13 @@ const ProductDetails = () => {
   const { id } = useParams();
   const { addToCart, toggleWishlist, wishlist } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const product = useMemo(() => products.find(p => p.id === parseInt(id)), [id]);
+  const galleryImages = useMemo(() => {
+    if (!product) return [];
+    return product.images && product.images.length ? product.images : [product.image];
+  }, [product]);
   const isWishlisted = wishlist.some(item => item.id === product?.id);
 
   if (!product) return (
@@ -36,7 +41,7 @@ const ProductDetails = () => {
           >
             <div className="aspect-[4/5] rounded-3xl overflow-hidden bg-secondary">
               <img 
-                src={product.image} 
+                src={galleryImages[activeImageIndex] || galleryImages[0]} 
                 alt={product.name} 
                 className="w-full h-full object-cover"
                 onError={(e) => {
@@ -53,13 +58,18 @@ const ProductDetails = () => {
                 }}
               />
             </div>
-            <div className="grid grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="aspect-square rounded-xl overflow-hidden bg-secondary opacity-50 hover:opacity-100 cursor-pointer transition-all">
-                  <img src={product.image} alt="" className="w-full h-full object-cover"
+            <div className="grid grid-cols-4 sm:grid-cols-6 gap-4">
+              {galleryImages.slice(0, 6).map((src, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => setActiveImageIndex(index)}
+                  className={`aspect-square rounded-xl overflow-hidden bg-secondary transition-all ${activeImageIndex === index ? 'ring-2 ring-white ring-opacity-60 opacity-100' : 'opacity-50 hover:opacity-100'}`}
+                >
+                  <img src={src} alt="" className="w-full h-full object-cover"
                     onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop'; }}
                   />
-                </div>
+                </button>
               ))}
             </div>
           </motion.div>

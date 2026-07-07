@@ -29,7 +29,7 @@ const ProductCard = ({ product }) => {
       {/* Image Container */}
       <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-secondary mb-4">
         <img
-          src={product.image}
+          src={product.images?.[0] || product.image}
           alt={product.name}
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
           onError={(e) => {

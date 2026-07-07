@@ -236,9 +236,9 @@ const PRODUCT_TEMPLATES = {
 };
 
 // Image resolver — uses ONLY verified, rock-solid Unsplash photo IDs
-const getUnsplashImage = (category, brand, templateName) => {
+const getUnsplashImage = (category, brand, templateName, seed = 0) => {
   const nameLower = templateName.toLowerCase();
-  const U = (id) => `https://images.unsplash.com/photo-${id}?q=80&w=800&auto=format&fit=crop`;
+  const U = (id) => `https://images.unsplash.com/photo-${id}?q=80&w=800&auto=format&fit=crop&sig=${seed}`;
 
   // WATCHES — verified mechanical watch photos
   if (category === "Watches") {
@@ -307,6 +307,10 @@ const getUnsplashImage = (category, brand, templateName) => {
   }
 
   return U("1523275335684-37898b6baf30");
+};
+
+const getProductImages = (category, brand, templateName, productIndex) => {
+  return Array.from({ length: 6 }, (_, offset) => getUnsplashImage(category, brand, templateName, productIndex * 6 + offset + 1));
 };
 
 // Dynamic deep-link router that maps each luxury product model directly to its authentic retailer product page
@@ -444,12 +448,14 @@ const generateProducts = () => {
       }
 
       // Build the final luxury product object with fail-safe, keyword-matched Unsplash images
+      const productImages = getProductImages(cat, brandObj.brand, templateObj.name, i);
       finalProducts.push({
         id: currentId++,
         name,
         price,
         category: cat,
-        image: getUnsplashImage(cat, brandObj.brand, templateObj.name),
+        image: productImages[0],
+        images: productImages,
         description: `Premium, highly curated ${name}. ${templateObj.desc}`,
         specs,
         externalLink: getProductDeepLink(cat, brandObj.brand, templateObj.name)
